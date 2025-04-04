@@ -163,6 +163,9 @@ class ActorCritic(nn.Module):
     def act_inference(self, observations):
         mode= self.actor(observations)
         if self.clip_actions:
+            # Apply tanh to clip the actions to [-1, 1]
+            mode = self.clipping_layer(mode)
+            # Rescale the actions to the desired range
             mode = ((mode + 1) / 2.0) * (self.clip_actions_range[1] - self.clip_actions_range[0]) + self.clip_actions_range[0]
         return mode
 
